@@ -44,6 +44,7 @@ export default class SideSwipe extends Component<CarouselProps, State> {
     threshold: 0,
     useVelocityForIndex: true,
     useNativeDriver: true,
+    bounces: false
   };
 
   constructor(props: CarouselProps) {
@@ -172,12 +173,28 @@ export default class SideSwipe extends Component<CarouselProps, State> {
   handleGestureMove = (e: GestureEvent, { dx }: GestureState) => {
     const currentOffset: number =
       this.state.currentIndex * this.props.itemWidth;
-    const resolvedOffset: number = currentOffset - dx;
+    let resolvedOffset: number = (currentOffset - dx);
+    
+    
+    if(this.props.bounces) {
+      this.list.scrollToOffset({
+        offset: resolvedOffset,
+        animated: false,
+      });
+    } else {
+      let startPageOffset = resolvedOffset < 0 
+      let endPage = this.state.currentIndex + 1 === this.props.data.length
+      if(startPageOffset) { resolvedOffset = 0 }
+      if(endPage && dx < 0) { resolvedOffset = currentOffset }
+      this.list.scrollToOffset({
+        offset: resolvedOffset,
+        animated: false,
+      });      
+    }
 
-    this.list.scrollToOffset({
-      offset: resolvedOffset,
-      animated: false,
-    });
+    console.log('ieu yeuh brad', dx, currentOffset, resolvedOffset)
+
+    
   };
 
   handleGestureRelease = (e: GestureEvent, { dx, vx }: GestureState) => {

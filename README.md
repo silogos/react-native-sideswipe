@@ -108,6 +108,9 @@ type CarouselProps = {
 
   // should we use native driver for animation
   useNativeDriver?: boolean,
+
+  // slider bounces when it reaches the end of the content
+  bounce?: boolean,
 }
 ```
 
